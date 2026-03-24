@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${isEdit} ? 'Cập nhật bác sĩ' : 'Thêm bác sĩ'">Form bác sĩ</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; max-width: 700px; }
+        label { display: block; margin-top: 12px; font-weight: bold; }
+        input, select { width: 100%; padding: 8px; margin-top: 4px; }
+        .error { color: #d32f2f; font-size: 14px; margin-top: 4px; }
+        .actions { margin-top: 16px; display: flex; gap: 8px; }
+    </style>
+</head>
+<body>
+<h1 th:text="${isEdit} ? 'Cập nhật bác sĩ' : 'Thêm bác sĩ mới'"></h1>
+
+<form th:object="${doctorForm}"
+      th:action="${isEdit} ? @{/admin/doctors/{id}/edit(id=${doctorId})} : @{/admin/doctors/create}"
+      method="post">
+    <label for="name">Tên bác sĩ</label>
+    <input id="name" type="text" th:field="*{name}">
+    <div class="error" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+
+    <label for="specialty">Chuyên khoa</label>
+    <input id="specialty" type="text" th:field="*{specialty}">
+    <div class="error" th:if="${#fields.hasErrors('specialty')}" th:errors="*{specialty}"></div>
+
+    <label for="departmentId">Khoa</label>
+    <select id="departmentId" th:field="*{departmentId}">
+        <option value="">-- Chọn khoa --</option>
+        <option th:each="department : ${departments}"
+                th:value="${department.id}"
+                th:text="${department.name}">
+        </option>
+    </select>
+    <div class="error" th:if="${#fields.hasErrors('departmentId')}" th:errors="*{departmentId}"></div>
+
+    <label for="image">Link hình ảnh</label>
+    <input id="image" type="text" th:field="*{image}" placeholder="https://...">
+
+    <div class="actions">
+        <button type="submit" th:text="${isEdit} ? 'Cập nhật' : 'Tạo mới'"></button>
+        <a th:href="@{/admin/doctors}">Quay lại</a>
+    </div>
+</form>
+</body>
+</html>

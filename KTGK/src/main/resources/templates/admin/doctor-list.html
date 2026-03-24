@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý bác sĩ</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .top { display: flex; justify-content: space-between; margin-bottom: 12px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background: #f8f8f8; }
+        .actions { display: flex; gap: 8px; }
+        .pagination { margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap; }
+        .pagination a, .pagination span { border: 1px solid #ccc; padding: 6px 10px; text-decoration: none; border-radius: 4px; }
+        .active { background: #1976d2; color: white; border-color: #1976d2; }
+        form { margin: 0; }
+    </style>
+</head>
+<body>
+<div class="top">
+    <h1>CRUD Bác sĩ (ADMIN)</h1>
+    <div>
+        <a th:href="@{/home}">Về trang chủ</a> |
+        <a th:href="@{/admin/doctors/create}">+ Thêm bác sĩ</a>
+    </div>
+</div>
+
+<table>
+    <thead>
+    <tr>
+        <th>Tên bác sĩ</th>
+        <th>Chuyên khoa</th>
+        <th>Khoa</th>
+        <th>Ảnh</th>
+        <th>Thao tác</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="doctor : ${doctorPage.content}">
+        <td th:text="${doctor.name}"></td>
+        <td th:text="${doctor.specialty}"></td>
+        <td th:text="${doctor.department.name}"></td>
+        <td><img th:src="${doctor.image}" alt="Ảnh" style="width:80px;height:60px;object-fit:cover;"></td>
+        <td class="actions">
+            <a th:href="@{/admin/doctors/{id}/edit(id=${doctor.id})}">Sửa</a>
+            <form th:action="@{/admin/doctors/{id}/delete(id=${doctor.id})}" method="post">
+                <button type="submit" onclick="return confirm('Xóa bác sĩ này?')">Xóa</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<div class="pagination" th:if="${doctorPage.totalPages > 0}">
+    <a th:if="${!doctorPage.first}" th:href="@{/admin/doctors(page=${currentPage - 1})}">Trước</a>
+    <span th:each="i : ${#numbers.sequence(0, doctorPage.totalPages - 1)}">
+        <a th:if="${i != currentPage}" th:href="@{/admin/doctors(page=${i})}" th:text="${i + 1}"></a>
+        <span th:if="${i == currentPage}" class="active" th:text="${i + 1}"></span>
+    </span>
+    <a th:if="${!doctorPage.last}" th:href="@{/admin/doctors(page=${currentPage + 1})}">Sau</a>
+</div>
+</body>
+</html>

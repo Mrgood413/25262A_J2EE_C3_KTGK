@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Appointments</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background: #f6f6f6; }
+    </style>
+</head>
+<body>
+<h1>My Appointments</h1>
+<a th:href="@{/home}">Về trang chủ</a>
+
+<table>
+    <thead>
+    <tr>
+        <th>Tên bác sĩ</th>
+        <th>Ngày khám</th>
+        <th>Khoa</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="a : ${appointments}">
+        <td th:text="${a.doctor.name}">BS</td>
+        <td th:text="${#temporals.format(a.appointmentDate, 'dd/MM/yyyy HH:mm')}">01/01/2026 08:00</td>
+        <td th:text="${a.doctor.department.name}">Khoa</td>
+    </tr>
+    <tr th:if="${#lists.isEmpty(appointments)}">
+        <td colspan="3">Bạn chưa có lịch khám nào.</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
